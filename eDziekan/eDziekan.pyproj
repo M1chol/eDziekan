@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>31b5ddda-ff0b-4607-b151-25174e2245b7</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>html_convert.py</StartupFile>
+    <StartupFile>main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,8 +22,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="credentials.py" />
-    <Compile Include="eDziekan.py" />
-    <Compile Include="html_convert.py" />
+    <Compile Include="handle_requests.py" />
+    <Compile Include="handle_html.py" />
+    <Compile Include="main.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
