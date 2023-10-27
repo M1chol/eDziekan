@@ -10,9 +10,8 @@ def convert():
     hti = Html2Image(browser='edge')
     hti.screenshot(
         html_file=target_name,
-        size=(540,560),
         save_as=temp_img_name
     )
     img = Image.open(temp_img_name)
-    img = img.crop((156,123,540,560))
+    img = img.crop((156,123,700,440))
     img.save(target_img_name)
