@@ -10,7 +10,7 @@ def load():
             username, password = dane.readline().split()
         print("Using credentials of", username)
     else:
-        print("IMPORTANT - Remember that your password and username is stored locally without encription. Anyone can gain acces to this file:",passFile)
+        print("IMPORTANT - Remember that your password and username are stored locally without encryption. Anyone can gain acces to this file:",passFile)
         username = input("Input username: ")
         password = input("Input password: ")
         with open(passFile, 'w') as dane:
