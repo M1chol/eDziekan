@@ -3,11 +3,9 @@
 repo optimized for Visual Studio
 
 ## Dependencies:
-- [html2image](https://pypi.org/project/html2image/)
-- [Pillow](https://pypi.org/project/requests/)
-- [requests](https://pypi.org/project/Pillow/)
+all dependencies listed in requirements.txt
 ```
-pip install html2image Pillow requests
+pip install -r requirements.txt
 ```
 ## How to use
 Run main.py and on first launch provide credentials.
