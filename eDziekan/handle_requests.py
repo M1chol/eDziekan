@@ -1,5 +1,3 @@
-from http.client import NotConnected
-from urllib import request
 import requests
 
 # Function to find end of html block
@@ -14,7 +12,7 @@ request_base = "https://s1.wcy.wat.edu.pl/ed1/index.php?"
 
 # Headers to mimic real browser
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36"
 }
 
 # Define target html name
@@ -52,7 +50,7 @@ def login(username, password):
             if tryLogin.status_code == 200:
                 print("Login successful")
                 # Save site as html for later processing
-                with open(target_name, "w", encoding="utf-8") as file:
+                with open(target_name, "w", encoding="iso-8859-2") as file:
                     file.write(tryLogin.text)
             else: print("Login failed")
 

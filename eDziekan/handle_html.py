@@ -13,5 +13,5 @@ def convert():
         save_as=temp_img_name
     )
     img = Image.open(temp_img_name)
-    img = img.crop((156,123,700,440))
+    # img = img.crop((156,123,700,440))
     img.save(target_img_name)
