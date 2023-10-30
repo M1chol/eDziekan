@@ -1,3 +1,5 @@
+from http.client import NotConnected
+from urllib import request
 import requests
 
 # Function to find end of html block
@@ -30,7 +32,14 @@ def login(username, password):
     requests.packages.urllib3.disable_warnings()
     with requests.Session() as session:
         # Send the POST request to main edziekanat site
-        main_site = session.get(request_base, verify=False)
+        try:
+            main_site = session.get(request_base, verify=False)
+        except requests.ConnectTimeout:
+            print("Connection timeout, aborting...")
+            quit()
+        except requests.ConnectionError:
+            print("Not connected to internet, aborting...")
+            quit()
         if main_site.status_code == 200:
             print("main_site request successful")
             # Locate Session ID - needed to create proper login request
