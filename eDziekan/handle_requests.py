@@ -1,12 +1,5 @@
 import requests
 
-# Function to find end of html block
-def crawl(text : str, index : int):
-    while (text[index] != "<") and (text[index]!= ">"):
-        index+=1
-        char = text[index]
-    return index
-
 # Define the main URL
 request_base = "https://s1.wcy.wat.edu.pl/ed1/index.php?"
 
@@ -18,39 +11,88 @@ headers = {
 # Define target html name
 target_name = "response.html"
 
-def login(username, password):
-    # Define the payload data
-    payload = {
-        "formname": "login",
-        "userid": username,
-        "password": password,
-        "default_fun": "1",
-    }
-    # Block verification - not sure if needed
-    requests.packages.urllib3.disable_warnings()
-    with requests.Session() as session:
+class edziekanSession:
+    def __init__(self) -> None:
+        self.requestBase = request_base
+        self.headers = headers
+        self.targetHtmlName = target_name
+        self.sid = ""
+        self.session = requests.Session()
+        self.log = False
+        self.username = ""
+        self.password = ""
+    
+    def Init(self, log=False) -> None:
+        self.log = log
+        # disable wornings for ssl certification
+        requests.packages.urllib3.disable_warnings()
         # Send the POST request to main edziekanat site
         try:
-            main_site = session.get(request_base, verify=False)
+            main_site = self.session.get(self.requestBase, verify=False)
         except requests.ConnectTimeout:
-            print("Connection timeout, aborting...")
-            quit()
+            self.Log("Connection timeout, aborting...")
+            self.Abort(-2)
         except requests.ConnectionError:
-            print("Not connected to internet, aborting...")
-            quit()
+            self.Log("Not connected to internet, aborting...")
+            self.Abort(-2)
         if main_site.status_code == 200:
-            print("main_site request successful")
+            self.Log("main_site request successful")
             # Locate Session ID - needed to create proper login request
-            if "sid=" in main_site.text: print("locating sid")
+            if "sid=" in main_site.text: self.Log("extracting sid...")
+            else: 
+                self.Log('failed locating sid, aborting...')
+                self.Abort(-1)
             sid_index=main_site.text.index("sid=")
-            login_sid=main_site.text[sid_index:crawl(main_site.text, sid_index)]
-            print(login_sid, "\nTrying to log in...")
-            # Sending login request
-            tryLogin = session.post(request_base+login_sid, data=payload, headers=headers, verify=False)
-            if tryLogin.status_code == 200:
-                print("Login successful")
-                # Save site as html for later processing
-                with open(target_name, "w", encoding="iso-8859-2") as file:
-                    file.write(tryLogin.text)
-            else: print("Login failed")
+            self.sid=main_site.text[sid_index:sid_index+36]
+        
+    def Abort(self, errorCode) -> int:
+        print(f"Session exited with status: {errorCode},")
+        if errorCode == -2: print("You are probably not connected to network or edziekanat is down")
+        if errorCode == -1: print("One or more processes of app failed or edziekanat was updated, please contact creator")
+        return errorCode
+        
+    def Log(self, logMessege) -> None:
+        if self.log: print(logMessege)
+        
+
+    def Login(self):
+        # Define the payload data
+        payload = {
+            "formname": "login",
+            "userid": self.username,
+            "password": self.password,
+            "default_fun": "1",
+        }
+        self.Log(f"{self.sid}\nTrying to log in...")
+        # Sending login request
+        #try:
+        tryLogin = self.session.post(self.requestBase+self.sid, data=payload, headers=self.headers, verify=False)
+        #except:
+        #self.Log('error occured while posting login info')
+        #self.Abort(-2)
+        if tryLogin.status_code == 200:
+            self.Log("Login successful")
+        else: 
+            self.Log("Login returned wrong status code")
+            self.Abort(-2)
+           
+    def requestScheduleTxt(self) -> None:
+        self.Log("requesting schedule")
+        
+        adress='https://s1.wcy.wat.edu.pl/ed1/logged_inc.php?'+self.sid+'&mid=328&iid=20234&exv=WCY23KY2S1&pos=0&rdo=1&t=6801839'
+        resp = requests.get(adress, headers=self.headers, verify=False, allow_redirects=True)
+        
+        filename = 'downloaded_file.html'
+
+        if resp.status_code == 200:
+            self.Log('file located')    
+            with open(filename, 'wb') as file:
+                file.write(resp.content)
+        else:
+            self.Log('file not found')
+            
+    def loadCredentials(self, username, password):
+        self.username = username
+        self.password = password
+
 
